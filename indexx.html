@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aditya Patil - B.Tech CSBS Portfolio</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com"></script> 
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJ8yI0IzYJtz5G/I5U2wX3G2q9p8G30r2nK1i8L38d1P5+4K+jVv42U9c9H9W9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        /* Define Inter font and set base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e1116; /* Deep charcoal background */
+            color: #d1d5db; /* Light gray text */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Accent Color: Violet 500 (#8b5cf6) */
+        .text-accent { color: #8b5cf6 !important; }
+        .bg-accent-light { background-color: #8b5cf6; }
+        .border-accent { border-color: #8b5cf6 !important; }
+        .hover\:text-accent:hover { color: #8b5cf6; }
+
+        /* Hero Section Canvas */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5; 
+        }
+        
+        /* Custom Hero Profile Photo Styles with Hover Animation (Retained from original) */
+        .hero-profile-photo {
+            position: relative;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 0 0 4px #1a202c, 0 0 20px rgba(139, 92, 246, 0.5); 
+            animation: float 4s ease-in-out infinite, pulse-glow 2s infinite alternate;
+            overflow: hidden; 
+        }
+        .hero-profile-photo::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0%;
+            height: 0%;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+            transform: translate(-50%, -50%);
+            animation: black-hole-grow 8s infinite ease-in-out alternate;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        @keyframes black-hole-grow {
+            0% { width: 0%; height: 0%; opacity: 0; box-shadow: 0 0 0 rgba(0,0,0,0); }
+            30% { width: 20%; height: 20%; opacity: 0.5; box-shadow: 0 0 20px rgba(0,0,0,0.7); }
+            60% { width: 40%; height: 40%; opacity: 0.8; box-shadow: 0 0 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.5); }
+            100% { width: 50%; height: 50%; opacity: 1; box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 30px rgba(0,0,0,0.7); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 4px #1a202c, 0 0 15px rgba(139, 92, 246, 0.4); }
+            100% { box-shadow: 0 0 0 6px #1a202c, 0 0 25px rgba(139, 92, 246, 0.8); }
+        }
+        .hero-profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 6px #1a202c, 0 0 30px rgba(139, 92, 246, 1);
+            animation-play-state: paused;
+        }
+        .hero-profile-photo:hover::before {
+            animation-play-state: paused;
+            opacity: 0.6 !important;
+            width: 30% !important;
+            height: 30% !important;
+        }
+
+        /* 4. CUSTOM BOOTSTRAP BUTTON STYLING */
+        /* Re-style Bootstrap btn-outline-primary to match the original purple-glow theme */
+        .btn-outline-primary {
+            --bs-btn-color: #8b5cf6;
+            --bs-btn-border-color: #8b5cf6;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #8b5cf6;
+            --bs-btn-hover-border-color: #a855f7;
+            --bs-btn-focus-shadow-rgb: 139, 92, 246; /* Violet focus glow */
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #8b5cf6;
+            --bs-btn-active-border-color: #a855f7;
+            
+            background-image: none !important; /* Override potential gradient conflict */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            color: white; /* Force white text over dark background */
+            background-color: #8b5cf6; /* Match original look */
+            border-color: #8b5cf6;
+        }
+        .btn-outline-primary:hover, .btn-outline-primary:active {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6) !important;
+             color: white !important;
+             background-color: #a855f7 !important;
+             border-color: #a855f7 !important;
+        }
+
+
+        /* Card and Hover Effects (Retained from original) */
+        .card-bg {
+            background-color: #1a202c; /* Slightly lighter inner background */
+            transition: all 0.3s ease;
+        }
+        .card-bg:hover {
+            background-color: #252b35;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-color: #8b5cf6;
+        }
+
+        /* Section Title Underline (Retained from original) */
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            color: white;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 75px;
+            height: 3px;
+            margin: 0.5rem auto 0;
+            background-color: #8b5cf6;
+            border-radius: 1px;
+        }
+
+        /* Scroll-triggered animation classes (Retained from original) */
+        .animate-in-view {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-in-view.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Social Icon Styles (Retained from original) */
+        .social-icon-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        .social-icon {
+            font-size: 2rem;
+            color: #d1d5db;
+            transition: all 0.3s ease-in-out;
+            animation: subtle-bounce 3s infinite ease-in-out;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        .social-icon i {
+            /* Ensures Font Awesome icons scale correctly with the w/h classes applied in the HTML */
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        .social-icon:hover {
+            color: #a855f7;
+            transform: scale(1.2) translateY(-5px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
+            background-color: rgba(139, 92, 246, 0.1);
+            animation-play-state: paused;
+        }
+        .linkedin-icon:hover { color: #0a66c2; box-shadow: 0 0 20px rgba(10, 102, 194, 0.8); background-color: rgba(10, 102, 194, 0.1); }
+        .github-icon:hover { color: #f0f6fc; box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); background-color: rgba(255, 255, 255, 0.1); }
+        .instagram-icon:hover { color: #e1306c; box-shadow: 0 0 20px rgba(225, 48, 108, 0.8); background-color: rgba(225, 48, 108, 0.1); }
+        .mail-icon:hover { color: #ea4335; box-shadow: 0 0 20px rgba(234, 67, 53, 0.8); background-color: rgba(234, 67, 53, 0.1); }
+        @keyframes subtle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md sticky-top navbar-dark bg-dark bg-opacity-75 backdrop-blur shadow-lg transition-all duration-300" style="--bs-bg-opacity: .5; background-color: #000 !important;">
+        <div class="container px-4 sm:px-6 lg:px-8">
+            <a class="navbar-brand text-3xl font-extrabold text-accent tracking-wider hover:text-white transition-colors" href="#">
+                Portfolio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="navbar-nav space-x-0 md:space-x-8 font-medium">
+                    <a class="nav-link text-gray-400 hover:text-accent transition duration-200" href="#about">About</a>
+                    <a class="nav-link text-gray-400 hover:text-accent transition duration-200" href="#academics">Academics</a>
+                    <a class="nav-link text-gray-400 hover:text-accent transition duration-200" href="#skills">Skills</a>
+                    <a class="nav-link text-gray-400 hover:text-accent transition duration-200" href="#certs">Certificates</a>
+                    <a class="nav-link text-gray-400 hover:text-accent transition duration-200" href="#projects">Projects</a>
+                    <a class="nav-link text-gray-400 hover:text-accent transition duration-200" href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header id="hero" class="relative flex items-center justify-center h-screen overflow-hidden">
+        <canvas id="hero-canvas"></canvas>
+        <div class="relative z-10 text-center px-6">
+            
+            <div
+                 alt="Aditya Patil Profile"
+                class="mx-auto w-40 h-40 rounded-full mb-8 border-4 border-violet-600 shadow-lg 
+                 bg-gray-800 text-violet-300 flex items-center justify-center 
+                text-6xl font-extrabold tracking-widest hero-profile-photo"
+            >
+                 ASP
+             </div>
+
+            <h1 class="text-6xl sm:text-7xl lg:text-8xl font-black mb-4 leading-tight">
+                <span class="text-accent">Aditya Patil</span>
+            </h1>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-8">
+                Crafting Solutions, Programmer & Systems Thinker
+            </h2>
+            <p class="text-xl max-w-4xl mx-auto text-gray-400 mb-12">Ideas that take off — where code, strategy, and innovation collide to launch next-gen digital flight systems</p>
+            <a href="#projects" class="btn btn-outline-primary px-8 py-3 rounded-full font-semibold shadow-xl">
+                View Portfolio &rarr;
+            </a>
+            <div class="social-icon-container">
+                <a href=http://linkedin.com/in/aditya-patil-3217b138a target="_blank" aria-label="LinkedIn" class="social-icon linkedin-icon">
+                    <i class="fa-brands fa-linkedin-in w-8 h-8"></i>
+                </a>
+                <a href="https://github.com/asp-strug" target="_blank" aria-label="GitHub" class="social-icon github-icon">
+                    <i class="fa-brands fa-github w-8 h-8"></i>
+                </a>
+                <a href="https://instagram.com/yourhandle" target="_blank" aria-label="Instagram" class="social-icon instagram-icon">
+                    <i class="fa-brands fa-instagram w-8 h-8"></i>
+                </a>
+                <a href="mailto:aspnew17at@gmail.com" target="_blank" aria-label="Email" class="social-icon mail-icon">
+                    <i class="fa-solid fa-envelope w-8 h-8"></i>
+                </a>
+            </div>
+            </div>
+    </header>
+
+    <section id="about" class="py-20 md:py-32 bg-[#0e1116]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <h2 class="section-title text-4xl font-bold text-center mb-16">About & Contact</h2>
+
+            <div class="grid md:grid-cols-3 gap-12 items-start">
+                
+                <div class="md:col-span-1 text-center animate-in-view card-bg p-8 rounded-2xl border border-gray-700/50">
+                    <h3 class="text-2xl font-bold mb-4 text-white">Aditya Patil</h3>
+                    <p class="text-accent font-medium mb-6">B.Tech CSBS</p>
+                    
+                    <div class="space-y-4">
+                        <a href="mailto:aspnew17at@gmail.com" target="_blank" class="flex items-center justify-center space-x-3 text-gray-300 hover:text-accent transition duration-300">
+                            <i class="fa-solid fa-envelope w-6 h-6"></i>
+                            <span class="text-base">aspnew17at@gmail.com</span>
+                        </a>
+                        <a  target="_blank" class="flex items-center justify-center space-x-3 text-gray-300 hover:text-accent transition duration-300">
+                            <i class="fas fa-phone"></i>
+                            <span class="text-base">Mob:-9284797156</span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 space-y-10">
+                    <div class="animate-in-view">
+                        <h4 class="text-3xl font-semibold mb-4 text-white">My Philosophy</h4>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            My journey in Computer Science and Business Systems is driven by the belief that technology should directly serve strategic organizational goals. I focus on developing code that is not just efficient, but also commercially viable and scalable. I thrive on complex problem-solving, particularly where data meets decision-making.
+                        </p>
+                        <p class="text-gray-400 mt-4 leading-relaxed text-lg">
+                            Currently exploring opportunities in Business Intelligence, Software Consulting, and Data Engineering roles for immediate employment/internships.
+                        </p>
+                    </div>
+
+                    <div class="animate-in-view">
+                        <h4 class="text-3xl font-semibold mb-4 text-white flex items-center">
+                            <i class="fa-solid fa-heart w-6 h-6 text-accent mr-3"></i>Interests
+                        </h4>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 bg-gray-700/50 rounded-full text-sm text-gray-200">Competitive Programming</span>
+                            <span class="px-4 py-2 bg-gray-700/50 rounded-full text-sm text-gray-200">Sketching</span>
+                            
+                            <span class="px-4 py-2 bg-gray-700/50 rounded-full text-sm text-gray-200">Product Design Thinking</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="academics" class="py-20 md:py-32 bg-[#1a202c]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <h2 class="section-title text-4xl font-bold text-center mb-16">Academic Excellence</h2>
+            
+            <div class="grid md:grid-cols-2 gap-10 animate-in-view">
+                
+                <div class="card-bg p-8 rounded-xl shadow-xl border border-gray-700/50 flex items-start space-x-4">
+                    <i class="fa-solid fa-graduation-cap w-8 h-8 text-accent flex-shrink-0 mt-1"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">B.Tech (CSBS) - Second Year</h3>
+                        <p class="text-gray-300 font-medium">JSPM’s Rajarshi Shahu College of Engineering, Tathawade, Pune</p>
+                        
+                        <div class="mt-4 p-4 border border-gray-600 rounded-lg bg-gray-800/50">
+                            <p class="text-base font-semibold text-white mb-2">School & Semester Results:</p>
+                            <ul class="text-gray-400 space-y-1 text-sm list-disc list-inside ml-2">
+                                <li><strong>10th CBSE:</strong> 70% (Vishwakalyan English Medium School)</li>
+                                <li><strong>12th CBSE:</strong> 79% (Priyadarshani School & Jr. College)</li>
+                                <li><strong>1st Sem:</strong> 7.4 SGPA</li>
+                                <li><strong>2nd Sem:</strong> 8.32 SGPA</li>
+                            </ul>
+                        </div>
+                        <p class="text-gray-400 mt-3">Relevant Major Coursework includes: Algorithm Design, Business Process Management, Predictive Analytics, and Enterprise Systems (ERP).</p>
+                    </div>
+                </div>
+
+                <div class="card-bg p-8 rounded-xl shadow-xl border border-gray-700/50 flex items-start space-x-4">
+                    <i class="fa-solid fa-briefcase w-8 h-8 text-accent flex-shrink-0 mt-1"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">Core Focus Areas</h3>
+                        <ul class="text-gray-400 space-y-2 list-disc list-inside">
+                            <li>Computer Science: Scalable Systems, Data Structures, OOP (Java/C++).</li>
+                            <li>Business: Operations Research, Management Information Systems.</li>
+                            <li>Interdisciplinary: Cross-Cultural Communication, Data Storytelling, Continuous Learning.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-20 md:py-32 bg-[#0e1116]">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <h2 class="section-title text-4xl font-bold text-center mb-16">Skills & Certifications</h2>
+
+        <div class="grid md:grid-cols-2 gap-12">
+            
+            <div class="animate-in-view">
+                <h3 class="text-3xl font-semibold mb-6 text-white flex items-center">
+                    <i class="fa-solid fa-code w-6 h-6 text-accent mr-3"></i>Technical Skills
+                </h3>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-200 mb-2">Programming & Foundations</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-1.5 bg-accent/20 text-accent rounded-md text-sm">C</span>
+                            <span class="px-4 py-1.5 bg-accent/20 text-accent rounded-md text-sm">C++</span>
+                            <span class="px-4 py-1.5 bg-accent/20 text-accent rounded-md text-sm">Java</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-200 mb-2">Web Fundamentals & Tools</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-1.5 bg-yellow-600/20 text-yellow-400 rounded-md text-sm">HTML</span>
+                            <span class="px-4 py-1.5 bg-yellow-600/20 text-yellow-400 rounded-md text-sm">Git/GitHub</span>
+                            <span class="px-4 py-1.5 bg-yellow-600/20 text-yellow-400 rounded-md text-sm">Git/GitHub</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="animate-in-view">
+                <h3 class="text-3xl font-semibold mb-6 text-white flex items-center">
+                    <i class="fa-solid fa-lightbulb w-6 h-6 text-accent mr-3"></i>Creative & Applied Skills
+                </h3>
+                <div class="space-y-4">
+                    <p class="text-gray-400 text-lg">
+                        <i class="fa-solid fa-pencil w-5 h-5 text-accent mr-2"></i>
+                        Sketching: Visual Communication, Idea Generation, UI/UX Visualization.
+                    </p>
+                    <p class="text-gray-400 text-lg">
+                        <i class="fa-solid fa-pen-fancy w-5 h-5 text-accent mr-2"></i>
+                        Writing: Technical Documentation, Clear Content Creation, Structural Clarity.
+                    </p>
+                   
+                    <p class="text-gray-400 text-lg">
+                        <i class="fa-solid fa-camera w-5 h-5 text-accent mr-2"></i>
+                        Photography: Composition, Detail Orientation, Aesthetic Sensitivity.
+                    </p>
+                    <p class="text-gray-400 text-lg">
+                        <i class="fa-solid fa-language w-5 h-5 text-accent mr-2"></i>
+                        Language Learning : Cultural Adaptability, Memory Retention, Structured Study.
+                    </p>
+                </div>
+            </div>
+        </div> <div id="certs" class="animate-in-view mt-16">
+            <h3 class="section-title text-3xl font-bold text-center mb-6">Certifications & Awards</h3>
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div class="certificate-item card-bg p-4 rounded-xl shadow-lg border border-gray-700/50 hover:border-accent hover:shadow-accent/30 cursor-pointer transition duration-300"
+                    data-image-src="uploaded:PHOTO-2025-10-14-00-11-09.jpg-11d245e2-5169-47ed-a482-ba2e6a050aed">
+                    <h4 class="text-lg font-bold mb-2 text-accent">NPTEL: Soft Skills & Personality</h4>
+                    <p class="text-gray-400 text-sm mb-3">NPTEL (MoE, Govt. of India) | Consolidated Score: 58%</p>
+                    <img src="nptel.jpg" 
+                        alt="NPTEL Certificate Preview"
+                        class="w-full h-auto rounded-lg object-cover border border-gray-600/50 aspect-video">
+                </div>
+                
+                <div class="certificate-item card-bg p-4 rounded-xl shadow-lg border border-gray-700/50 hover:border-accent hover:shadow-accent/30 cursor-pointer transition duration-300"
+                    data-image-src="uploaded:PHOTO-2025-10-14-00-09-28 (1).jpg-914b3b9e-33df-4762-926f-4da59b3bb724">
+                    <h4 class="text-lg font-bold mb-2 text-accent">2nd Runner Up: Scifari 4.0 (BGMI)</h4>
+                    <p class="text-gray-400 text-sm mb-3">MIT Arts, Commerce & Science College | Intercollegiate Event</p>
+                    <img src="scifari.jpg" 
+                        alt="Scifari 4.0 Award Preview"
+                        class="w-full h-auto rounded-lg object-cover border border-gray-600/50 aspect-video">
+                </div>
+                
+                <div class="certificate-item card-bg p-4 rounded-xl shadow-lg border border-gray-700/50 hover:border-accent hover:shadow-accent/30 cursor-pointer transition duration-300"
+                    data-image-src="uploaded:PHOTO-2025-10-14-00-07-43 (1).jpg-87625b20-96cf-4699-948a-a90189993992">
+                    <h4 class="text-lg font-bold mb-2 text-accent">Participation: AVAHAN 5.0 (BGMI)</h4>
+                    <p class="text-gray-400 text-sm mb-3">Rotaract Club of RSCOE | Enthusiastic Participation</p>
+                    <img src="avahan5.jpg" 
+                        alt="AVAHAN 5.0 Certificate Preview"
+                        class="w-full h-auto rounded-lg object-cover border border-gray-600/50 aspect-video">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="projects" class="py-20 md:py-32 bg-[#0e1116]">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <h2 class="section-title text-4xl font-bold text-center mb-16">
+            <i class="fa-solid fa-laptop-code w-8 h-8 text-accent mr-3"></i>Featured Projects
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            
+            <div class="project-card card-bg p-6 rounded-xl shadow-xl border border-gray-700/50 block animate-in-view">
+                <h3 class="text-2xl font-bold mb-3 text-accent">Tic Tac Toe Game (CLI)</h3>
+                <p class="text-gray-300 mb-4">A command-line implementation focusing on algorithmic game logic and user input handling in Java.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-blue-600/20 text-blue-300 rounded-full text-xs font-medium">Java</span>
+                    <span class="px-3 py-1 bg-gray-600/20 text-gray-300 rounded-full text-xs font-medium">OOP</span>
+                    <span class="px-3 py-1 bg-green-600/20 text-green-300 rounded-full text-xs font-medium">CLI</span>
+                </div>
+            </div>
+
+            
+            <div class="project-card card-bg p-6 rounded-xl shadow-xl border border-gray-700/50 block animate-in-view">
+                <h3 class="text-2xl font-bold mb-3 text-accent">Blood Bank Management System</h3>
+                <p class="text-gray-300 mb-4">A foundational system to manage records, availability, and requests, demonstrating database integration and C++ structures.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-red-600/20 text-red-300 rounded-full text-xs font-medium">C++</span>
+                    <span class="px-3 py-1 bg-purple-600/20 text-purple-300 rounded-full text-xs font-medium">Data Structures</span>
+                    <span class="px-3 py-1 bg-yellow-600/20 text-yellow-300 rounded-full text-xs font-medium">File Handling</span>
+                </div>
+            </div>
+
+            
+            <div class="project-card card-bg p-6 rounded-xl shadow-xl border border-gray-700/50 block animate-in-view">
+    <h3 class="text-2xl font-bold mb-3 text-accent">SWIGGY CLONE (App UI)</h3>
+    <p class="text-gray-300 mb-4">Conceptual front-end clone focusing on modern UI design and information architecture. Built using HTML/CSS to showcase visual skills.</p>
+    <div class="flex flex-wrap gap-2">
+        <span class="px-3 py-1 bg-orange-600/20 text-orange-300 rounded-full text-xs font-medium">HTML/CSS</span>
+        <span class="px-3 py-1 bg-cyan-600/20 text-cyan-300 rounded-full text-xs font-medium">UI Design</span>
+        <span class="px-3 py-1 bg-pink-600/20 text-pink-300 rounded-full text-xs font-medium">Prototyping</span>
+    </div>
+</div>
+            
+        </div>
+        
+        <div class="text-center mt-12">
+            <p class="text-gray-400 text-lg">More projects are actively being developed for the coming semester!</p>
+        </div>
+    </div>
+</section>
+   
+    <section id="contact" class="py-20 md:py-32 bg-[#0e1116]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+            <h2 class="section-title text-4xl font-bold text-center mb-16">Let's Connect</h2>
+            <div class="card-bg p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-700/50 animate-in-view">
+                <p class="text-center text-gray-300 mb-8 text-lg">
+                    I am actively seeking challenging roles where I can combine my technical skills and business acumen.
+                </p>
+                
+                <form id="contact-form" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                        <input type="text" id="name" name="name" required
+                               class="w-full px-4 py-3 bg-[#0e1116] border border-gray-700 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent text-white transition duration-200">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-4 py-3 bg-[#0e1116] border border-gray-700 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent text-white transition duration-200">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                        <textarea id="message" name="message" rows="4" required
+                                 class="w-full px-4 py-3 bg-[#0e1116] border border-gray-700 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent text-white transition duration-200"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full btn btn-outline-primary px-6 py-3 text-lg font-bold rounded-xl">
+                        Send My Message
+                    </button>
+                    <div id="status-message" class="text-center mt-4 text-sm font-medium hidden"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>&copy; 2025 Aditya Patil. B.Tech CSBS Portfolio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center hidden" onclick="this.classList.add('hidden')">
+        <div class="bg-[#1a202c] p-8 rounded-xl shadow-2xl max-w-sm w-full border border-accent" onclick="event.stopPropagation()">
+            <h4 class="text-xl font-bold mb-4 text-accent">Notification</h4>
+            <p id="modal-text" class="text-gray-300 mb-6"></p>
+            <button onclick="document.getElementById('custom-modal').classList.add('hidden')" class="btn btn-outline-primary px-5 py-2 rounded-lg float-right">
+                Close
+            </button>
+            </div>
+    </div>
+
+    <div id="image-lightbox" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center hidden p-4" onclick="closeLightbox()">
+        <div class="relative max-w-5xl max-h-full" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white bg-red-600 hover:bg-red-700 rounded-full p-2 z-10 transition-transform transform hover:scale-110 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <img id="lightbox-image" src="" alt="Full size certificate" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl border-4 border-accent/50 object-contain">
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN77Lh6S+8z" crossorigin="anonymous"></script>
+
+    <script>
+        // CLIENT-SIDE SCRIPTS 
+
+        // Intersection Observer for Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Stop observing once visible if a single animation run is desired
+                    // observer.unobserve(entry.target); 
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-in-view').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Image Lightbox Logic
+        function openLightbox(src) {
+            document.getElementById('lightbox-image').src = src;
+            document.getElementById('image-lightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('image-lightbox').classList.add('hidden');
+        }
+
+        document.querySelectorAll('.certificate-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const imageSrc = this.getAttribute('data-image-src');
+                if (imageSrc) {
+                    openLightbox(imageSrc);
+                }
+            });
+        });
+
+        // Placeholder for Form Submission (since no backend is provided)
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const statusMessage = document.getElementById('status-message');
+            const name = document.getElementById('name').value;
+
+            // Simple validation
+            if (!name || !document.getElementById('email').value || !document.getElementById('message').value) {
+                statusMessage.textContent = "Please fill out all fields.";
+                statusMessage.classList.remove('hidden', 'text-green-400');
+                statusMessage.classList.add('text-red-400');
+                return;
+            }
+
+            // Simulate form submission success
+            statusMessage.textContent = `Thank you, ${name}! Your message has been sent.`;
+            statusMessage.classList.remove('hidden', 'text-red-400');
+            statusMessage.classList.add('text-green-400');
+            this.reset(); // Clear the form
+            
+            // Optionally hide message after a few seconds
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 5000);
+        });
+        
+        // THREE.js Hero Background Animation (Retained and ensured it runs on load)
+        window.onload = function() {
+            // Setup scene, camera, renderer
+            const canvas = document.getElementById('hero-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Add background particles (dots)
+            const particleCount = 200;
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // position
+                positions.push((Math.random() - 0.5) * 100);
+                positions.push((Math.random() - 0.5) * 100);
+                positions.push((Math.random() - 0.5) * 100);
+
+                // color: subtle violet/blueish glow
+                color.setHSL(0.7 + Math.random() * 0.1, 0.5, 0.5);
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({ 
+                size: 0.1, 
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7 
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            camera.position.z = 5;
+
+            // Animation Loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles slightly
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.001;
+
+                renderer.render(scene, camera);
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            // Start the animation on window load.
+            animate();
+        };
+
+    </script>
+</body>
+</html>
